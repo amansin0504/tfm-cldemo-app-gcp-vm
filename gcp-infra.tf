@@ -1,72 +1,72 @@
 
 #Create subnets in VNET network 
-resource "google_compute_network" "csw-ciscolive-network" {
-  name                    = "csw-ciscolive-network"
+resource "google_compute_network" "csw-demo-network" {
+  name                    = format("%s-%s",var.cec,"csw-demo-network")
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "websubnet1" {
-    name                 = "websubnet1"
+    name                 = format("%s-%s",var.cec,"websubnet1")
     region               = var.region
-    network              = google_compute_network.csw-ciscolive-network.id
+    network              = google_compute_network.csw-demo-network.id
     ip_cidr_range        = var.websubnet1
     log_config {
-    aggregation_interval = "INTERVAL_10_MIN"
+    aggregation_interval = "INTERVAL_5_SEC"
     flow_sampling        = 0.5
     metadata             = "INCLUDE_ALL_METADATA"
     }
 }
 resource "google_compute_subnetwork" "websubnet2" {
-    name                 = "websubnet2"
+    name                 = format("%s-%s",var.cec,"websubnet2")
     region        = var.region
-    network       = google_compute_network.csw-ciscolive-network.id
+    network       = google_compute_network.csw-demo-network.id
     ip_cidr_range = var.websubnet2
     log_config {
-    aggregation_interval = "INTERVAL_10_MIN"
+    aggregation_interval = "INTERVAL_5_SEC"
     flow_sampling        = 0.5
     metadata             = "INCLUDE_ALL_METADATA"
     }
 }
 resource "google_compute_subnetwork" "appsubnet1" {
-    name                 = "appsubnet1"
+    name                 = format("%s-%s",var.cec,"appsubnet1")
     region        = var.region
-    network       = google_compute_network.csw-ciscolive-network.id
+    network       = google_compute_network.csw-demo-network.id
     ip_cidr_range = var.appsubnet1
     log_config {
-    aggregation_interval = "INTERVAL_10_MIN"
+    aggregation_interval = "INTERVAL_5_SEC"
     flow_sampling        = 0.5
     metadata             = "INCLUDE_ALL_METADATA"
     }
 }
 resource "google_compute_subnetwork" "appsubnet2" {
-    name                 = "appsubnet2"
+    name                 = format("%s-%s",var.cec,"appsubnet2")
     region        = var.region
-    network       = google_compute_network.csw-ciscolive-network.id
+    network       = google_compute_network.csw-demo-network.id
     ip_cidr_range = var.appsubnet2
     log_config {
-    aggregation_interval = "INTERVAL_10_MIN"
+    aggregation_interval = "INTERVAL_5_SEC"
     flow_sampling        = 0.5
     metadata             = "INCLUDE_ALL_METADATA"
     }
 }
 resource "google_compute_subnetwork" "dbsubnet1" {
-    name                 = "dbsubnet1"
+    name                 = format("%s-%s",var.cec,"dbsubnet1")
     region        = var.region
-    network       = google_compute_network.csw-ciscolive-network.id
+    network       = google_compute_network.csw-demo-network.id
     ip_cidr_range = var.dbsubnet1
     log_config {
-    aggregation_interval = "INTERVAL_10_MIN"
+    aggregation_interval = "INTERVAL_5_SEC"
     flow_sampling        = 0.5
     metadata             = "INCLUDE_ALL_METADATA"
     }
 }
 resource "google_compute_subnetwork" "dbsubnet2" {
-    name                 = "dbsubnet2"
+    name                 = format("%s-%s",var.cec,"dbsubnet2")
     region        = var.region
-    network       = google_compute_network.csw-ciscolive-network.id
+    network       = google_compute_network.csw-demo-network.id
     ip_cidr_range = var.dbsubnet2
     log_config {
-    aggregation_interval = "INTERVAL_10_MIN"
+    aggregation_interval = "INTERVAL_5_SEC"
     flow_sampling        = 0.5
     metadata             = "INCLUDE_ALL_METADATA"
     }
@@ -75,8 +75,8 @@ resource "google_compute_subnetwork" "dbsubnet2" {
 
 #Create firewall rules
 resource "google_compute_firewall" "csw-demo-firewall" {
-  name    = "csw-demo-firewall"
-  network = google_compute_network.csw-ciscolive-network.name
+  name    = format("%s-%s",var.cec,"csw-demo-firewall")
+  network = google_compute_network.csw-demo-network.name
   allow {
     protocol = "icmp"
   }
@@ -89,16 +89,16 @@ resource "google_compute_firewall" "csw-demo-firewall" {
 
 #Create cloud nat for outbound connectivity from private VMs.
 resource "google_compute_router" "csw-demo-router" {
-  name    = "csw-demo-router"
+  name    = format("%s-%s",var.cec,"csw-demo-router")
   region  = var.region
-  network = google_compute_network.csw-ciscolive-network.id
+  network = google_compute_network.csw-demo-network.id
 
   bgp {
     asn = 64514
   }
 }
 resource "google_compute_router_nat" "csw-demo-nat" {
-  name                               = "csw-demo-nat"
+  name                               = format("%s-%s",var.cec,"csw-demo-nat")
   router                             = google_compute_router.csw-demo-router.name
   region                             = google_compute_router.csw-demo-router.region
   nat_ip_allocate_option             = "AUTO_ONLY"
@@ -107,7 +107,7 @@ resource "google_compute_router_nat" "csw-demo-nat" {
 
 #Create frontend virtual machine
 resource "google_compute_instance" "frontend" {
-  name         = "frontend"
+  name         = format("%s-%s",var.cec,"frontend")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/frontend.sh")
@@ -129,7 +129,7 @@ resource "google_compute_instance" "frontend" {
 
 #Create checkout virtual machine
 resource "google_compute_instance" "checkout" {
-  name         = "checkout"
+  name         = format("%s-%s",var.cec,"checkout")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/checkout.sh")
@@ -150,7 +150,7 @@ resource "google_compute_instance" "checkout" {
 
 #Create ad virtual machine
 resource "google_compute_instance" "ad" {
-  name         = "ad"
+  name         = format("%s-%s",var.cec,"ad")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/ad.sh")
@@ -171,7 +171,7 @@ resource "google_compute_instance" "ad" {
 
 #Create recommendation virtual machine
 resource "google_compute_instance" "recommendation" {
-  name         = "recommendation"
+  name         = format("%s-%s",var.cec,"recommendation")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/recommendation.sh")
@@ -192,7 +192,7 @@ resource "google_compute_instance" "recommendation" {
 
 #Create payment virtual machine
 resource "google_compute_instance" "payment" {
-  name         = "payment"
+  name         = format("%s-%s",var.cec,"payment")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/payment.sh")
@@ -213,7 +213,7 @@ resource "google_compute_instance" "payment" {
 
 #Create email virtual machine
 resource "google_compute_instance" "email" {
-  name         = "email"
+  name         = format("%s-%s",var.cec,"email")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/email.sh")
@@ -234,7 +234,7 @@ resource "google_compute_instance" "email" {
 
 #Create productcatalog virtual machine
 resource "google_compute_instance" "productcatalog" {
-  name         = "productcatalog"
+  name         = format("%s-%s",var.cec,"productcatalog")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/productcatalog.sh")
@@ -255,7 +255,7 @@ resource "google_compute_instance" "productcatalog" {
 
 #Create shipping virtual machine
 resource "google_compute_instance" "shipping" {
-  name         = "shipping"
+  name         = format("%s-%s",var.cec,"shipping")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/shipping.sh")
@@ -276,7 +276,7 @@ resource "google_compute_instance" "shipping" {
 
 #Create currency virtual machine
 resource "google_compute_instance" "currency" {
-  name         = "currency"
+  name         = format("%s-%s",var.cec,"currency")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/currency.sh")
@@ -297,7 +297,7 @@ resource "google_compute_instance" "currency" {
 
 #Create cart virtual machine
 resource "google_compute_instance" "cart" {
-  name         = "cart"
+  name         = format("%s-%s",var.cec,"cart")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/cart.sh")
@@ -318,7 +318,7 @@ resource "google_compute_instance" "cart" {
 
 #Create redis virtual machine
 resource "google_compute_instance" "redis" {
-  name         = "redis"
+  name         = format("%s-%s",var.cec,"redis")
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/redis.sh")

@@ -1,5 +1,8 @@
 # Update before use
 
+variable cec {
+    default = "ciscolive"
+}
 variable region {
     default = "us-east1"
 }
@@ -63,7 +66,7 @@ variable currencyip {
     default = "10.120.213.17"
 }
 variable cartip {
-    default = "10.0.213.18"
+    default = "10.120.213.18"
 }
 variable redisip {
     default = "10.120.215.10"
