@@ -111,6 +111,7 @@ resource "google_compute_instance" "frontend" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/frontend.sh")
+  labels       = {name = "frontend"}
 
   boot_disk {
     initialize_params {
@@ -133,6 +134,7 @@ resource "google_compute_instance" "checkout" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/checkout.sh")
+  labels       = {name = "checkout"}
 
   boot_disk {
     initialize_params {
@@ -154,6 +156,7 @@ resource "google_compute_instance" "ad" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/ad.sh")
+  labels       = {name = "ad"}
 
   boot_disk {
     initialize_params {
@@ -175,6 +178,7 @@ resource "google_compute_instance" "recommendation" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/recommendation.sh")
+  labels       = {name = "recommendation"}
 
   boot_disk {
     initialize_params {
@@ -196,6 +200,7 @@ resource "google_compute_instance" "payment" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/payment.sh")
+  labels       = {name = "payment"}
 
   boot_disk {
     initialize_params {
@@ -217,6 +222,7 @@ resource "google_compute_instance" "email" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/email.sh")
+  labels       = {name = "email"}
 
   boot_disk {
     initialize_params {
@@ -238,6 +244,7 @@ resource "google_compute_instance" "productcatalog" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/productcatalog.sh")
+  labels       = {name = "productcatalog"}
 
   boot_disk {
     initialize_params {
@@ -259,6 +266,7 @@ resource "google_compute_instance" "shipping" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/shipping.sh")
+  labels       = {name = "shipping"}
 
   boot_disk {
     initialize_params {
@@ -280,6 +288,7 @@ resource "google_compute_instance" "currency" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/currency.sh")
+  labels       = {name = "currency"}
 
   boot_disk {
     initialize_params {
@@ -301,6 +310,7 @@ resource "google_compute_instance" "cart" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/cart.sh")
+  labels       = {name = "cart"}
 
   boot_disk {
     initialize_params {
@@ -322,6 +332,7 @@ resource "google_compute_instance" "redis" {
   machine_type = "e2-medium"
   zone         = var.zone
   metadata_startup_script = file("scripts/redis.sh")
+  labels       = {name = "redis"}
 
   boot_disk {
     initialize_params {
